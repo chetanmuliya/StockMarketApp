@@ -1,8 +1,9 @@
 package learn.cm.stockmarketapp.data.repository
 
-import com.opencsv.CSVReader
+import com.opencsv.CSVParser
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import learn.cm.stockmarketapp.data.csv.CsvParser
 import learn.cm.stockmarketapp.data.local.StockDatabase
 import learn.cm.stockmarketapp.data.mapper.toCompanyListing
 import learn.cm.stockmarketapp.data.remote.StockApi
@@ -18,7 +19,8 @@ import javax.inject.Singleton
 @Singleton
 class StockRepositoryImpl @Inject constructor(
     val api: StockApi,
-    val db: StockDatabase
+    val db: StockDatabase,
+    val companyListingsParser: CsvParser<CompanyListings>
 ): StockRepository{
 
     val dao = db.dao
@@ -44,15 +46,28 @@ class StockRepositoryImpl @Inject constructor(
 
             val remoteListing = try{
                 val response = api.getListings()
-                val csvReader = CSVReader(InputStreamReader(response.byteStream()))
+                companyListingsParser.parse(response.byteStream())
             } catch(e: IOException){
                 e.printStackTrace()
                 emit(Resource.Error("Couldn't load data"))
+                null
             } catch (e: HttpException){
                 e.printStackTrace()
                 emit(Resource.Error("Couldn't load data"))
+                null
             }
 
+            remoteListing?.let { listings ->
+                dao.clearCompanyListing()
+                dao.insertCompanyListings(
+                    listings.map { it.toCompanyListing() }
+                )
+                emit(Resource.Success(
+                    data = dao.searchCompanyListing("")
+                        .map { it.toCompanyListing() }
+                ))
+                emit(Resource.Loading(false))
+            }
         }
     }
 }
