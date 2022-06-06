@@ -7,7 +7,9 @@ import learn.cm.stockmarketapp.domain.model.CompanyListings
 import java.io.InputStream
 import java.io.InputStreamReader
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class CompanyListingParser @Inject constructor(): CsvParser<CompanyListings> {
 
     override suspend fun parse(stream: InputStream): List<CompanyListings> {
