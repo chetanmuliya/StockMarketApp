@@ -53,7 +53,7 @@ class CompanyListingViewModel @Inject constructor(
                     when(result){
                         is Resource.Success -> {
                             result.data?.let { listings ->
-                                state.copy(
+                                state = state.copy(
                                     companies = listings
                                 )
                             }
