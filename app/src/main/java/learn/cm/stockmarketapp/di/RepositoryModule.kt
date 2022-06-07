@@ -6,7 +6,9 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import learn.cm.stockmarketapp.data.csv.CompanyListingParser
 import learn.cm.stockmarketapp.data.csv.CsvParser
+import learn.cm.stockmarketapp.data.csv.IntradayInfoParser
 import learn.cm.stockmarketapp.data.repository.StockRepositoryImpl
+import learn.cm.stockmarketapp.domain.model.CompanyInfo
 import learn.cm.stockmarketapp.domain.model.CompanyListings
 import learn.cm.stockmarketapp.domain.repository.StockRepository
 import javax.inject.Singleton
@@ -20,6 +22,12 @@ abstract class RepositoryModule {
     abstract fun bindCompanyListingParser(
         companyListingParser: CompanyListingParser
     ): CsvParser<CompanyListings>
+
+    @Binds
+    @Singleton
+    abstract fun bindIntraDayInfoParser(
+        intradayInfoParser: IntradayInfoParser
+    ): CsvParser<CompanyInfo>
 
     @Binds
     @Singleton
