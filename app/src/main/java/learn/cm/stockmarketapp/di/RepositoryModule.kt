@@ -10,6 +10,7 @@ import learn.cm.stockmarketapp.data.csv.IntradayInfoParser
 import learn.cm.stockmarketapp.data.repository.StockRepositoryImpl
 import learn.cm.stockmarketapp.domain.model.CompanyInfo
 import learn.cm.stockmarketapp.domain.model.CompanyListings
+import learn.cm.stockmarketapp.domain.model.IntradayInfo
 import learn.cm.stockmarketapp.domain.repository.StockRepository
 import javax.inject.Singleton
 
@@ -27,7 +28,7 @@ abstract class RepositoryModule {
     @Singleton
     abstract fun bindIntraDayInfoParser(
         intradayInfoParser: IntradayInfoParser
-    ): CsvParser<CompanyInfo>
+    ): CsvParser<IntradayInfo>
 
     @Binds
     @Singleton
